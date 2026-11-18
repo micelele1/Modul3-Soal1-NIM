@@ -1,4 +1,4 @@
-# EL2008 Modul 2 - Rabu - Soal 1 (Scoring per test case)
+# EL2008 Modul 3 - Rabu - Soal 1 (Scoring per test case)
 
 Kerjakan file `soal1.c`.
 
