@@ -17,142 +17,147 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # N=3 -> 9 petak, jarak 8 = 6+2, tanpa tangga/naga
-      - name: Case 01 - Papan 3x3 tanpa tangga & naga (jawab 2)
+      # Papan 6x6 (36 petak), jarak 35 -> 5x6 + 5 = 6 langkah
+      - name: Case 01 - Papan 6x6 tanpa tangga & naga (jawab 6)
         id: case-01
         uses: classroom-resources/autograding-io-grader@v1
         with:
-          test-name: Case 01 - Papan 3x3 tanpa tangga & naga (jawab 2)
+          test-name: Case 01 - Papan 6x6 tanpa tangga & naga (jawab 6)
           setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
           command: ./soal1
           input: |
-            3
             0
             0
           expected-output: |
-            2
+            6
           comparison-method: exact
           timeout: 2
           max-score: 5
 
-      # N=0 -> target 0, langsung 0
-      - name: Case 02 - Edge case N = 0 (jawab 0)
+      # Tangga 2->36: lempar 1 ke petak 2, langsung naik ke 36
+      - name: Case 02 - Tangga langsung ke petak akhir (jawab 1)
         id: case-02
         uses: classroom-resources/autograding-io-grader@v1
         with:
-          test-name: Case 02 - Edge case N = 0 (jawab 0)
-          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
-          command: ./soal1
-          input: |
-            0
-          expected-output: |
-            0
-          comparison-method: exact
-          timeout: 2
-          max-score: 5
-
-      # N=1 -> sudah di petak akhir, langsung 0
-      - name: Case 03 - Edge case N = 1 (jawab 0)
-        id: case-03
-        uses: classroom-resources/autograding-io-grader@v1
-        with:
-          test-name: Case 03 - Edge case N = 1 (jawab 0)
+          test-name: Case 02 - Tangga langsung ke petak akhir (jawab 1)
           setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
           command: ./soal1
           input: |
             1
-          expected-output: |
+            2 36
             0
+          expected-output: |
+            1
           comparison-method: exact
           timeout: 2
           max-score: 5
 
-      # N=2 -> 4 petak, jarak 3 -> cukup 1 langkah
-      - name: Case 04 - Papan 2x2, sekali lempar dadu (jawab 1)
+      # Tangga 7->30: langkah 1 (1->7 naik ke 30), langkah 2 (30->36)
+      - name: Case 03 - Satu tangga mempercepat langkah (jawab 2)
+        id: case-03
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 03 - Satu tangga mempercepat langkah (jawab 2)
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
+          command: ./soal1
+          input: |
+            1
+            7 30
+            0
+          expected-output: |
+            2
+          comparison-method: exact
+          timeout: 2
+          max-score: 5
+
+      # Tangga berantai: 1->2(naik 15), 15->16(naik 29), 29->30(naik 36)
+      - name: Case 04 - Tangga berantai 3 langkah (jawab 3)
         id: case-04
         uses: classroom-resources/autograding-io-grader@v1
         with:
-          test-name: Case 04 - Papan 2x2, sekali lempar dadu (jawab 1)
+          test-name: Case 04 - Tangga berantai 3 langkah (jawab 3)
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
+          command: ./soal1
+          input: |
+            3
+            2 15
+            16 29
+            30 36
+            0
+          expected-output: |
+            3
+          comparison-method: exact
+          timeout: 2
+          max-score: 5
+
+      # Tangga pendek: 1->4(naik 14) -> 20 -> 26 -> 32 -> 36 (5 langkah)
+      - name: Case 05 - Tangga pendek hemat 1 langkah (jawab 5)
+        id: case-05
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 05 - Tangga pendek hemat 1 langkah (jawab 5)
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
+          command: ./soal1
+          input: |
+            1
+            4 14
+            0
+          expected-output: |
+            5
+          comparison-method: exact
+          timeout: 2
+          max-score: 5
+
+      # Dua opsi tangga: 2->20 (selesai 4 langkah) vs 6->31 (selesai 2 langkah)
+      - name: Case 06 - Memilih tangga paling optimal (jawab 2)
+        id: case-06
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 06 - Memilih tangga paling optimal (jawab 2)
           setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
           command: ./soal1
           input: |
             2
-            0
+            2 20
+            6 31
             0
           expected-output: |
-            1
+            2
           comparison-method: exact
           timeout: 2
           max-score: 5
 
-      # N=5 -> 25 petak, jarak 24 = 4 x 6
-      - name: Case 05 - Papan 5x5 tanpa tangga & naga (jawab 4)
-        id: case-05
-        uses: classroom-resources/autograding-io-grader@v1
-        with:
-          test-name: Case 05 - Papan 5x5 tanpa tangga & naga (jawab 4)
-          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
-          command: ./soal1
-          input: |
-            5
-            0
-            0
-          expected-output: |
-            4
-          comparison-method: exact
-          timeout: 2
-          max-score: 5
-
-      # Tangga 2->25: lempar 1, naik tangga ke petak 25
-      - name: Case 06 - Tangga langsung ke petak akhir (jawab 1)
-        id: case-06
-        uses: classroom-resources/autograding-io-grader@v1
-        with:
-          test-name: Case 06 - Tangga langsung ke petak akhir (jawab 1)
-          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
-          command: ./soal1
-          input: |
-            5
-            1
-            2 25
-            0
-          expected-output: |
-            1
-          comparison-method: exact
-          timeout: 2
-          max-score: 5
-
-      # Tangga 2->20, 21->60, 61->100: dipakai bergantian tiap langkah
-      - name: Case 07 - Tangga berantai di papan 10x10 (jawab 3)
+      # Naga di petak 7, 13, 19, 25, 31 memaksa langkah tidak selalu +6 (jadi 7 langkah)
+      - name: Case 07 - Naga menghalangi jalur optimal +6 (jawab 7)
         id: case-07
         uses: classroom-resources/autograding-io-grader@v1
         with:
-          test-name: Case 07 - Tangga berantai di papan 10x10 (jawab 3)
+          test-name: Case 07 - Naga menghalangi jalur optimal +6 (jawab 7)
           setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
           command: ./soal1
           input: |
-            10
-            3
-            2 20
-            21 60
-            61 100
             0
+            5
+            7 1
+            13 1
+            19 1
+            25 1
+            31 1
           expected-output: |
-            3
+            7
           comparison-method: exact
           timeout: 2
           max-score: 5
 
-      # Petak 2-7 semuanya naga ke petak 1, petak 16 mustahil dicapai
-      - name: Case 08 - Naga memblokir semua jalan (jawab -1)
+      # Petak 2-7 semuanya naga kembali ke petak 1, mustahil maju
+      - name: Case 08 - Naga memblokir semua jalan keluar dari start (jawab -1)
         id: case-08
         uses: classroom-resources/autograding-io-grader@v1
         with:
-          test-name: Case 08 - Naga memblokir semua jalan (jawab -1)
+          test-name: Case 08 - Naga memblokir semua jalan keluar dari start (jawab -1)
           setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
           command: ./soal1
           input: |
-            4
             0
             6
             2 1
@@ -167,61 +172,53 @@ jobs:
           timeout: 2
           max-score: 5
 
-      # Tangga 1->16 hanya aktif saat mendarat, bukan saat start; jarak 15 -> 3 langkah
-      - name: Case 09 - Tangga di petak 1 tidak berpengaruh (jawab 3)
+      # Tangga di petak 1 (1->36) tidak aktif saat mulai dari petak 1 (jawab tetap 6)
+      - name: Case 09 - Tangga di petak 1 tidak berpengaruh (jawab 6)
         id: case-09
         uses: classroom-resources/autograding-io-grader@v1
         with:
-          test-name: Case 09 - Tangga di petak 1 tidak berpengaruh (jawab 3)
+          test-name: Case 09 - Tangga di petak 1 tidak berpengaruh (jawab 6)
           setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
           command: ./soal1
           input: |
-            4
             1
-            1 16
+            1 36
             0
+          expected-output: |
+            6
+          comparison-method: exact
+          timeout: 2
+          max-score: 5
+
+      # Trik naga untuk mundur: 1->7(naik 25), 25->27(naga turun ke 22), 22->23(naik 36) = 3 langkah
+      - name: Case 10 - Memanfaatkan naga untuk mencapai dasar tangga (jawab 3)
+        id: case-10
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 10 - Memanfaatkan naga untuk mencapai dasar tangga (jawab 3)
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
+          command: ./soal1
+          input: |
+            2
+            7 25
+            23 36
+            1
+            27 22
           expected-output: |
             3
           comparison-method: exact
           timeout: 2
           max-score: 5
 
-      # 8 tangga + 0 naga di papan 10x10; BFS harus pilih jalur terpendek
-      - name: Case 10 - Papan 10x10 dengan tangga dan naga campuran (jawab 14)
-        id: case-10
-        uses: classroom-resources/autograding-io-grader@v1
-        with:
-          test-name: Case 10 - Papan 10x10 dengan tangga dan naga campuran (jawab 14)
-          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
-          command: ./soal1
-          input: |
-            10
-            8
-            3 22
-            5 8
-            11 26
-            20 29
-            27 1
-            21 9
-            17 4
-            19 7
-            0
-          expected-output: |
-            14
-          comparison-method: exact
-          timeout: 2
-          max-score: 5
-
-      # 3 tangga + 4 naga, jalur tangga 2->15, 10->30, 25->35 lalu ke 36
-      - name: Case 11 - Papan 6x6 campuran tangga & naga (jawab 3)
+      # Campuran tangga dan naga: 1->2(15) -> 16..20 -> 25(35) -> 36 (4 langkah)
+      - name: Case 11 - Papan 6x6 campuran tangga & naga (jawab 4)
         id: case-11
         uses: classroom-resources/autograding-io-grader@v1
         with:
-          test-name: Case 11 - Papan 6x6 campuran tangga & naga (jawab 3)
+          test-name: Case 11 - Papan 6x6 campuran tangga & naga (jawab 4)
           setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
           command: ./soal1
           input: |
-            6
             3
             2 15
             10 30
@@ -232,25 +229,31 @@ jobs:
             33 9
             34 5
           expected-output: |
-            3
+            4
           comparison-method: exact
           timeout: 2
           max-score: 5
 
-      # N=100 -> 10000 petak, uji kinerja BFS pada papan besar
-      - name: Case 12 - Papan besar 100x100 tanpa tangga & naga (jawab 1667)
+      # Dinding 6 naga berurutan di petak 20-25 dan tidak ada tangga yang melompatinya
+      - name: Case 12 - Dinding naga di tengah papan tanpa tangga pelompat (jawab -1)
         id: case-12
         uses: classroom-resources/autograding-io-grader@v1
         with:
-          test-name: Case 12 - Papan besar 100x100 tanpa tangga & naga (jawab 1667)
+          test-name: Case 12 - Dinding naga di tengah papan tanpa tangga pelompat (jawab -1)
           setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal1 soal1.c
           command: ./soal1
           input: |
-            100
-            0
-            0
+            1
+            3 15
+            6
+            20 2
+            21 2
+            22 2
+            23 2
+            24 2
+            25 2
           expected-output: |
-            1667
+            -1
           comparison-method: exact
           timeout: 2
           max-score: 5
